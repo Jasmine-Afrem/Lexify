@@ -1,11 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Theme for MainActivity and other content activities -->
-    <style name="Theme.Lexify.App" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Lexify.App" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Your existing items -->
         <item name="colorPrimary">@color/lex_purple_primary</item>
-        <item name="colorPrimaryVariant">@color/lex_purple_primary_dark</item>
         <item name="colorOnPrimary">@color/lex_surface_color</item>
         <item name="android:textSize">16sp</item>
+
+        <!-- Add other M3 theme attributes as needed, e.g.: -->
+        <item name="colorSurface">@color/lex_surface_color</item>
+        <item name="colorOnSurface">@color/lex_text_on_surface</item>
         <!-- ... other app theme attributes ... -->
     </style>
 
