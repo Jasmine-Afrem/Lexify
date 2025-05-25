@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Lexify.CardView"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="8dp"
+    app:cardElevation="2dp"> <!-- Subtle elevation for list items -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/textViewItemWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WORD"
+            android:textAppearance="?attr/textAppearanceHeadlineSmall"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:id="@+id/textViewItemDetails"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Part of Speech: ...\nDefinition: ...\nSynonyms: ...\nExamples: ..."
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:layout_marginTop="8dp"
+            android:visibility="gone"
+            android:lineSpacingExtra="4dp"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

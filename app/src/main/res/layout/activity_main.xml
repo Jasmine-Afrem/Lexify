@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".game.MainActivity"
+    android:background="#FFFFFF"
+    android:padding="24dp">
+
+    <!-- Container for all the content -->
+    <LinearLayout
+        android:id="@+id/container"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp">
+
+        <!-- App Logo (Now bigger) -->
+        <ImageView
+            android:id="@+id/logomic"
+            android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="40dp"
+        android:src="@drawable/logomic" />
+
+        <!-- Start Game Button (Solid Purple, No Borders) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/start_game_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:backgroundTint="@color/lex_purple_primary"
+            android:text="Start Game"
+            android:textColor="@android:color/white"
+            app:cornerRadius="16dp"
+            app:iconPadding="12dp"
+            app:rippleColor="@color/lex_purple_primary_dark" />
+
+        <!-- How to Play Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/how_to_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="How to Play"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/lex_purple_primary"
+            android:layout_marginBottom="20dp"
+            app:cornerRadius="16dp"
+            app:iconPadding="12dp"
+            app:rippleColor="@color/lex_purple_primary" />
+
+        <!-- Leaderboard Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/leaderboard_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leaderboard"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/lex_purple_primary"
+            android:layout_marginBottom="20dp"
+            app:cornerRadius="16dp"
+            app:iconPadding="12dp"
+            app:rippleColor="@color/lex_purple_primary_dark" />
+
+        <!-- Settings Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Settings"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/lex_purple_primary"
+            app:cornerRadius="16dp"
+            app:iconPadding="12dp"
+            app:rippleColor="@color/lex_purple_primary_dark" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

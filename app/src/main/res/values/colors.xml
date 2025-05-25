@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Lexify Purple Theme - MD3 Inspired -->
+    <color name="lex_purple_primary">#6A0DAD</color> <!-- Your main vibrant purple -->
+    <color name="lex_purple_primary_dark">#4B0082</color> <!-- A darker shade for primary variant -->
+    <color name="lex_purple_primary_light">#E0B0FF</color> <!-- A lighter shade for containers/highlights -->
+
+    <color name="lex_purple_secondary">#9370DB</color> <!-- Medium Purple - for secondary actions -->
+    <color name="lex_purple_secondary_dark">#7A5DC7</color>
+    <color name="lex_purple_secondary_light">#C9B6F8</color>
+
+    <color name="lex_accent_pink">#FF69B4</color> <!-- Hot Pink - for "Give Up" or strong call to action -->
+    <color name="lex_accent_pink_dark">#D9509A</color>
+
+    <!-- Neutral & Text Colors -->
+    <color name="lex_light_background">#F5F3F7</color> <!-- Very light lavender/gray for page background -->
+    <color name="lex_surface_color">#FFFFFF</color> <!-- White for cards, dialogs -->
+    <color name="lex_text_on_purple_primary">#FFFFFF</color>
+    <color name="lex_text_on_purple_secondary">#FFFFFF</color>
+    <color name="lex_text_on_pink">#FFFFFF</color>
+    <color name="lex_text_on_light_bg">#330033</color> <!-- Dark purple/black for text on light backgrounds -->
+    <color name="lex_text_on_surface">#1E001E</color>  <!-- Dark purple for text on white surfaces -->
+    <color name="lex_text_subtle_on_light_bg">#785B78</color> <!-- Muted purple/gray for less important text -->
+    <color name="lex_outline_color">#D1C4E9</color> <!-- Light purple for borders/outlines -->
+    <color name="lex_disabled_tint">#BCA4CC</color>
+
+    <!-- Game Grid Cell Colors (Wordle Style) -->
+    <color name="game_grid_cell_empty_bg">@color/lex_purple_primary</color>
+    <color name="game_grid_cell_empty_border">@color/lex_outline_color</color>
+    <color name="game_grid_cell_text">@color/lex_text_on_surface</color> <!-- Text color inside grid cells -->
+    <color name="game_grid_cell_correct_pos_bg">#6AAA64</color> <!-- Green (Standard Wordle) -->
+    <color name="game_grid_cell_correct_letter_bg">#C9B458</color> <!-- Yellow (Standard Wordle) -->
+    <color name="game_grid_cell_incorrect_bg">#8A8A8A</color> <!-- Medium Gray (Standard Wordle) -->
+    <color name="game_grid_cell_revealed_bg">@color/lex_purple_primary_light</color> <!-- For "give up" -->
+
+    <!-- MD3 Theming Attributes Mapping -->
+    <color name="md_theme_primary">@color/lex_purple_primary</color>
+    <color name="md_theme_onPrimary">@color/lex_text_on_purple_primary</color>
+    <color name="md_theme_primaryContainer">@color/lex_purple_primary_light</color>
+    <color name="md_theme_onPrimaryContainer">@color/lex_text_on_light_bg</color> <!-- Text on light purple container -->
+
+    <color name="md_theme_secondary">@color/lex_purple_secondary</color>
+    <color name="md_theme_onSecondary">@color/lex_text_on_purple_secondary</color>
+    <color name="md_theme_secondaryContainer">@color/lex_purple_secondary_light</color>
+    <color name="md_theme_onSecondaryContainer">@color/lex_text_on_light_bg</color>
+
+    <color name="md_theme_tertiary">@color/lex_accent_pink</color> <!-- Using pink as tertiary -->
+    <color name="md_theme_onTertiary">@color/lex_text_on_pink</color>
+    <color name="md_theme_tertiaryContainer">#FFD9E2</color> <!-- Light pink container -->
+    <color name="md_theme_onTertiaryContainer">#3E001E</color>
+
+    <color name="md_theme_error">#BA1A1A</color>
+    <color name="md_theme_onError">#FFFFFF</color>
+    <color name="md_theme_errorContainer">#FFDAD6</color>
+    <color name="md_theme_onErrorContainer">#410002</color>
+
+    <color name="md_theme_background">@color/lex_light_background</color>
+    <color name="md_theme_onBackground">@color/lex_text_on_light_bg</color>
+    <color name="md_theme_surface">@color/lex_surface_color</color>
+    <color name="md_theme_onSurface">@color/lex_text_on_surface</color>
+    <color name="md_theme_surfaceVariant">@color/lex_purple_primary_light</color> <!-- Light purple for surface variants -->
+    <color name="md_theme_onSurfaceVariant">@color/lex_text_on_light_bg</color> <!-- Text on light purple variant -->
+    <color name="md_theme_outline">@color/lex_outline_color</color>
+    <color name="md_theme_shadow">#000000</color>
+</resources>

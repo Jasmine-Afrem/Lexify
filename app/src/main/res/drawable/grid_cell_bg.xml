@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/lex_purple_primary" /> <!-- Initial purple color -->
+    <corners android:radius="8dp" /> <!-- Rounder than before -->
+    <!-- <stroke android:width="2dp" android:color="@color/lex_purple_primary_light" /> Optional border -->
+</shape>

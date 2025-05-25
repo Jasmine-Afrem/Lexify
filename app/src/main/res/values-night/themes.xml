@@ -1,0 +1,72 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Lexify" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/md_theme_primary</item>
+        <item name="colorOnPrimary">@color/md_theme_onPrimary</item>
+        <item name="colorPrimaryContainer">@color/md_theme_primaryContainer</item>
+        <item name="colorOnPrimaryContainer">@color/md_theme_onPrimaryContainer</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/md_theme_secondary</item>
+        <item name="colorOnSecondary">@color/md_theme_onSecondary</item>
+        <item name="colorSecondaryContainer">@color/md_theme_secondaryContainer</item>
+        <item name="colorOnSecondaryContainer">@color/md_theme_onSecondaryContainer</item>
+        <!-- Tertiary brand color. -->
+        <item name="colorTertiary">@color/md_theme_tertiary</item>
+        <item name="colorOnTertiary">@color/md_theme_onTertiary</item>
+        <item name="colorTertiaryContainer">@color/md_theme_tertiaryContainer</item>
+        <item name="colorOnTertiaryContainer">@color/md_theme_onTertiaryContainer</item>
+        <!-- Error color. -->
+        <item name="colorError">@color/md_theme_error</item>
+        <item name="colorOnError">@color/md_theme_onError</item>
+        <item name="colorErrorContainer">@color/md_theme_errorContainer</item>
+        <item name="colorOnErrorContainer">@color/md_theme_onErrorContainer</item>
+        <!-- Background and Surface colors -->
+        <item name="android:colorBackground">@color/md_theme_background</item>
+        <item name="colorOnBackground">@color/md_theme_onBackground</item>
+        <item name="colorSurface">@color/md_theme_surface</item>
+        <item name="colorOnSurface">@color/md_theme_onSurface</item>
+        <item name="colorSurfaceVariant">@color/md_theme_surfaceVariant</item>
+        <item name="colorOnSurfaceVariant">@color/md_theme_onSurfaceVariant</item>
+        <item name="colorOutline">@color/md_theme_outline</item>
+
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item> <!-- Or a specific color -->
+        <!-- Customize your theme here. -->
+        <item name="android:fontFamily">@font/sour_gummy_regular</item>
+    </style>
+
+    <style name="Theme.Lexify" parent="Base.Theme.Lexify" />
+
+    <!-- Specific styles for components -->
+    <style name="Lexify.Button" parent="Widget.Material3.Button">
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="cornerRadius">16dp</item> <!-- Rounded corners -->
+        <item name="android:letterSpacing">0.02</item>
+        <item name="android:textAllCaps">false</item> <!-- Or true if you prefer -->
+    </style>
+
+    <style name="Lexify.Button.Primary" parent="Lexify.Button">
+        <item name="backgroundTint">@color/lex_purple_primary</item>
+        <item name="android:textColor">@color/lex_surface_color</item>
+    </style>
+
+    <style name="Lexify.Button.Secondary" parent="Lexify.Button">
+        <item name="backgroundTint">@color/lex_purple_primary</item>
+        <item name="android:textColor">@color/lex_surface_color</item>
+    </style>
+
+    <style name="Lexify.Button.GiveUp" parent="Lexify.Button">
+        <item name="backgroundTint">@color/lex_purple_primary</item>
+        <item name="android:textColor">@color/lex_surface_color</item>
+    </style>
+
+    <style name="Lexify.CardView" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">12dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardBackgroundColor">@color/md_theme_surface</item>
+    </style>
+</resources>
