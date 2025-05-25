@@ -11,7 +11,7 @@ import com.example.lexify.R; // You need this for R.layout.activity_splash
 
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int YOUR_SPLASH_XML_DURATION = 3000; // How long to show YOUR XML layout
+    private static final int YOUR_SPLASH_XML_DURATION = 2500; // How long to show YOUR XML layout
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -76,11 +76,14 @@
         <item name="cardBackgroundColor">@color/lex_surface_color</item>
     </style>
 
-    <style name="PurpleKeyboardRow"> <!-- Removed parent="" as it's not needed for a basic style group -->
+    <style name="PurpleKeyboardRow">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:orientation">horizontal</item>
-        <item name="android:layout_marginBottom">6dp</item>
+        <!-- Adjust or remove marginBottom as needed -->
+        <item name="android:layout_marginBottom">2dp</item> <!-- Try a smaller value -->
+        <!-- OR remove it completely if you want no extra space beyond button margins: -->
+        <!-- <item name="android:layout_marginBottom">0dp</item> -->
         <item name="android:gravity">center</item>
     </style>
 
@@ -88,18 +91,19 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_weight">1</item>
-        <item name="android:layout_marginStart">3dp</item>
-        <item name="android:layout_marginEnd">3dp</item>
-        <item name="android:paddingTop">14dp</item>
-        <item name="android:paddingBottom">14dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginStart">1dp</item> <!-- Slightly reduced margin -->
+        <item name="android:layout_marginEnd">1dp</item>   <!-- Slightly reduced margin -->
+        <item name="android:paddingTop">1dp</item>      <!-- Balanced padding -->
+        <item name="android:paddingBottom">10dp</item>   <!-- Balanced padding -->
+        <item name="android:textSize">16sp</item>        <!-- Slightly larger, more legible text -->
         <item name="android:minWidth">0dp</item>
-        <item name="android:minHeight">0dp</item>
+        <item name="android:minHeight">44dp</item>       <!-- Ensure a decent minimum touch height -->
         <item name="backgroundTint">@color/lex_purple_primary</item>
         <item name="android:textColor">@color/lex_text_on_purple_primary</item>
         <item name="cornerRadius">8dp</item>
         <item name="android:elevation">1dp</item>
         <item name="rippleColor">@color/lex_purple_primary_light</item>
+        <item name="android:includeFontPadding">false</item>
     </style>
 
     <style name="PurpleKeyboardButton.Special" parent="PurpleKeyboardButton">
