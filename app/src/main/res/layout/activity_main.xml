@@ -61,11 +61,12 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:text="Lexify"
+                        android:text="Welcome to"
                         android:textSize="48sp"
                         android:textColor="@android:color/white"
                         android:fontFamily="@font/sour_gummy_regular"
                         android:letterSpacing="0.05" />
+
                 </FrameLayout>
 
                 <!-- Content Section -->
@@ -74,6 +75,16 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:padding="24dp">
+
+                    <!-- Lexify Logo -->
+                    <ImageView
+                        android:layout_width="200dp"
+                        android:layout_height="60dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/lexify_text"
+                        android:contentDescription="Lexify"
+                        android:scaleType="fitCenter"
+                        android:layout_marginBottom="16dp" />
 
                     <!-- Player Info Section -->
                     <LinearLayout
@@ -267,26 +278,6 @@
                         </com.google.android.material.card.MaterialCardView>
                     </GridLayout>
 
-                    <!-- Welcome Section -->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Welcome to Lexify!"
-                        android:textSize="32sp"
-                        android:fontFamily="@font/sour_gummy_regular"
-                        android:textColor="@color/lex_text_on_surface" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:gravity="center"
-                        android:text="Test your vocabulary with our word guessing game!"
-                        android:textSize="18sp"
-                        android:fontFamily="@font/sour_gummy_regular"
-                        android:textColor="@color/lex_text_subtle_on_light_bg" />
-
                     <!-- Start Game Button -->
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/buttonStartGame"
@@ -322,3 +313,4 @@
         app:dividerInsetEnd="16dp" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
+

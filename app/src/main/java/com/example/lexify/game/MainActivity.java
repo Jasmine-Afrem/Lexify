@@ -144,22 +144,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int itemId = item.getItemId();
         
         if (itemId == R.id.nav_home) {
-            // Already in MainActivity
+            // Already on home screen
             drawerLayout.closeDrawer(GravityCompat.START);
+            return true;
         } else if (itemId == R.id.nav_start_game) {
-            startGame();
+            startActivity(new Intent(this, GameActivity.class));
         } else if (itemId == R.id.nav_previous_levels) {
-            showPreviousLevels();
+            startActivity(new Intent(this, PreviousLevelsActivity.class));
         } else if (itemId == R.id.nav_how_to_play) {
-            showHowToPlay();
-        } else if (itemId == R.id.nav_leaderboard) {
-            showLeaderboard();
+            startActivity(new Intent(this, HowToPlayActivity.class));
+        } else if (itemId == R.id.nav_achievements) {
+            startActivity(new Intent(this, AchievementsActivity.class));
         } else if (itemId == R.id.nav_settings) {
-            openSettings();
+            startActivity(new Intent(this, SettingsActivity.class));
         } else if (itemId == R.id.nav_about) {
-            showAbout();
+            startActivity(new Intent(this, AboutActivity.class));
         } else if (itemId == R.id.nav_quit) {
-            showQuitConfirmationDialog();
+            finish();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -185,16 +186,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(intent);
     }
 
-    private void showHowToPlay() {
-        Toast.makeText(this, "How To Play: Coming Soon!", Toast.LENGTH_SHORT).show();
-    }
-
     private void showLeaderboard() {
         Toast.makeText(this, "Leaderboard: Coming Soon!", Toast.LENGTH_SHORT).show();
     }
 
     private void showAbout() {
-        Toast.makeText(this, "About Lexify: Coming Soon!", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+        startActivity(intent);
     }
 
     private void showQuitConfirmationDialog() {

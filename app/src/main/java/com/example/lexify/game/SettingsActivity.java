@@ -8,9 +8,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.lexify.R;
+import com.example.lexify.utils.ToastUtils;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
@@ -93,8 +93,8 @@ public class SettingsActivity extends AppCompatActivity {
         }
         editor.apply();
 
-        // Show success message
-        Toast.makeText(this, "Changes saved successfully!", Toast.LENGTH_SHORT).show();
+        // Show success message using custom toast
+        ToastUtils.showCustomToast(this, "Changes saved successfully!", true);
         
         // Return to previous screen
         finish();

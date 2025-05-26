@@ -48,5 +48,22 @@
             android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.Lexify" />
+
+        <activity
+            android:name=".game.HowToPlayActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Lexify" />
+
+        <activity
+            android:name=".game.AchievementsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
+
+        <activity 
+            android:name=".game.AboutActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.Lexify" />
     </application>
 </manifest>
