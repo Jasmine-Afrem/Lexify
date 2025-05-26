@@ -20,8 +20,9 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
+import androidx.gridlayout.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,10 @@ import java.util.Map;
 
 import com.google.android.material.button.MaterialButton;
 import android.graphics.Color;
+import android.view.WindowManager;
+import android.os.Build;
+import com.google.android.material.appbar.MaterialToolbar;
+import com.google.android.material.card.MaterialCardView;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -53,17 +58,19 @@ public class GameActivity extends AppCompatActivity {
     
     private int wordLength = 5;
 
-    private GridLayout gridLayoutWord;
+    private MaterialToolbar toolbar;
+    private MaterialCardView wordDisplayCard;
+    private GridLayout wordDisplayContainer;
+    private GridLayout hintPreviewGrid;
     private TextView[][] letterCells;
-    private EditText hiddenEditText;
-    private Button buttonSubmitGuess;
-    private Button buttonHint;
-    private Button buttonGiveUp;
-    private TextView textViewLevelInfo;
-    private TextView textViewClueArea;
-    private MaterialButton buttonToggleKeyboard;
+    private TextView[] hintCells;
+    private MaterialButton buttonSubmit;
+    private ImageButton buttonHint;
+    private ImageButton buttonFlag;
+    private ImageButton buttonKeyboard;
     private View keyboardCard;
     private boolean isKeyboardVisible = false;
+    private TextView textViewClueArea;
 
     private GameManager gameManager;
     private Level currentLevelData;
@@ -80,13 +87,22 @@ public class GameActivity extends AppCompatActivity {
     private long gameStartTime;
     private SharedPreferences gamePrefs;
 
-    private GridLayout hintPreviewGrid;
-    private TextView[] hintPreviewCells;
     private boolean[] revealedHintPositions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Make the status bar transparent and extend content behind it
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows(false);
+        } else {
+            getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            );
+        }
+        
         setContentView(R.layout.activity_game);
 
         // Initialize preferences
@@ -98,6 +114,12 @@ public class GameActivity extends AppCompatActivity {
         gameManager = new GameManager();
         playerStats = new PlayerStats(this);
         gameStartTime = System.currentTimeMillis();
+
+        // Set up toolbar back button
+        toolbar = findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setNavigationOnClickListener(v -> showExitConfirmationDialog());
+        }
 
         // Initialize UI components
         initializeUIComponents();
@@ -116,27 +138,26 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void initializeUIComponents() {
-        textViewLevelInfo = findViewById(R.id.textViewLevelInfo);
-        if (textViewLevelInfo == null) {
-            Log.e("GameActivity", "Failed to find textViewLevelInfo");
+        toolbar = findViewById(R.id.toolbar);
+        if (toolbar == null) {
+            Log.e("GameActivity", "Failed to find toolbar");
             showErrorAndFinish("Failed to initialize game components");
             return;
         }
 
-        gridLayoutWord = findViewById(R.id.gridLayoutWord);
-        if (gridLayoutWord == null) {
-            Log.e("GameActivity", "Failed to find gridLayoutWord");
+        wordDisplayCard = findViewById(R.id.wordDisplayCard);
+        if (wordDisplayCard == null) {
+            Log.e("GameActivity", "Failed to find wordDisplayCard");
             showErrorAndFinish("Failed to initialize game components");
             return;
         }
 
-        hiddenEditText = findViewById(R.id.hiddenEditText);
-        buttonSubmitGuess = findViewById(R.id.buttonSubmitGuess);
-        buttonHint = findViewById(R.id.buttonHint);
-        buttonGiveUp = findViewById(R.id.buttonGiveUp);
-        textViewClueArea = findViewById(R.id.textViewClueArea);
-        buttonToggleKeyboard = findViewById(R.id.buttonToggleKeyboard);
-        keyboardCard = findViewById(R.id.keyboardCard);
+        wordDisplayContainer = findViewById(R.id.wordDisplayContainer);
+        if (wordDisplayContainer == null) {
+            Log.e("GameActivity", "Failed to find wordDisplayContainer");
+            showErrorAndFinish("Failed to initialize game components");
+            return;
+        }
 
         hintPreviewGrid = findViewById(R.id.hintPreviewGrid);
         if (hintPreviewGrid == null) {
@@ -145,21 +166,29 @@ public class GameActivity extends AppCompatActivity {
             return;
         }
 
+        buttonSubmit = findViewById(R.id.buttonSubmit);
+        buttonHint = findViewById(R.id.buttonHint);
+        buttonFlag = findViewById(R.id.buttonFlag);
+        textViewClueArea = findViewById(R.id.textViewClue);
+        buttonKeyboard = findViewById(R.id.buttonKeyboard);
+        keyboardCard = findViewById(R.id.keyboardCard);
+
         // Set initial button states
-        buttonSubmitGuess.setEnabled(true);
+        buttonSubmit.setEnabled(true);
         buttonHint.setEnabled(true);
-        buttonGiveUp.setEnabled(true);
-        buttonToggleKeyboard.setEnabled(true);
+        buttonFlag.setEnabled(true);
+        buttonKeyboard.setEnabled(true);
 
         // Set click listeners
-        buttonSubmitGuess.setOnClickListener(v -> handleSubmitGuess());
+        buttonSubmit.setOnClickListener(v -> handleSubmitGuess());
         buttonHint.setOnClickListener(v -> handleHint());
-        buttonGiveUp.setOnClickListener(v -> handleGiveUp());
+        buttonFlag.setOnClickListener(v -> handleGiveUp());
+        buttonKeyboard.setOnClickListener(v -> toggleKeyboard());
     }
 
     private void setupKeyboardAndInput() {
         // Set up keyboard toggle
-        buttonToggleKeyboard.setOnClickListener(v -> toggleKeyboard());
+        buttonKeyboard.setOnClickListener(v -> toggleKeyboard());
         keyboardCard.setVisibility(View.GONE);
         keyboardCard.setAlpha(0f);
 
@@ -169,20 +198,13 @@ public class GameActivity extends AppCompatActivity {
         // Set up physical keyboard input
         setupKeyboardInput();
 
-        // Disable system keyboard for hidden EditText
-        if (hiddenEditText != null) {
-            hiddenEditText.setFocusable(false);
-            hiddenEditText.setFocusableInTouchMode(false);
-        }
-
         // Hide system keyboard
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         View currentFocus = getCurrentFocus();
-        if (currentFocus == null) {
-            currentFocus = getWindow().getDecorView().getRootView();
-        }
-        if (imm != null && currentFocus != null && currentFocus.getWindowToken() != null) {
-            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        if (currentFocus != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            if (imm != null && currentFocus.getWindowToken() != null) {
+                imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
         }
     }
 
@@ -253,10 +275,14 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void showExitConfirmationDialog() {
-        new AlertDialog.Builder(this)
-                .setTitle("Exit Game")
+        if (isFinishing()) {
+            return;
+        }
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog dialog = builder.setTitle("Exit Game")
                 .setMessage("Are you sure you want to exit? Your progress will be saved.")
-                .setPositiveButton("Yes", (dialog, which) -> {
+                .setPositiveButton("Yes", (dialogInterface, which) -> {
                     // Mark remaining words as failed attempts
                     if (currentLevelData != null) {
                         int remainingWords = currentLevelData.getWordsToGuess().size() - currentWordIndexInLevel;
@@ -278,7 +304,17 @@ public class GameActivity extends AppCompatActivity {
                     finish();
                 })
                 .setNegativeButton("No", null)
-                .show();
+                .setCancelable(true)
+                .create();
+
+        // Ensure dialog is dismissed when activity is destroyed
+        dialog.setOnDismissListener(dialogInterface -> {
+            if (isFinishing()) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private void startNewLevel() {
@@ -302,10 +338,9 @@ public class GameActivity extends AppCompatActivity {
         }
 
         wordLength = currentLevelData.getWordsToGuess().get(0).getWord().length();
-        gridLayoutWord.setColumnCount(wordLength);
-        int rowsForThisLevel = Math.min(MAX_ROWS_ON_GRID, currentLevelData.getWordsToGuess().size());
-        gridLayoutWord.setRowCount(rowsForThisLevel > 0 ? rowsForThisLevel : 1);
-        initializeGridUI(rowsForThisLevel > 0 ? rowsForThisLevel : 1);
+        wordDisplayContainer.removeAllViews();
+        letterCells = new TextView[currentLevelData.getWordsToGuess().size()][wordLength];
+        initializeGridUI(currentLevelData.getWordsToGuess().size());
 
         prepareForNextWordInLevel();
         System.out.println("GA_DEBUG: startNewLevel - Successfully started Level " + currentLevelData.getLevelNumber());
@@ -325,7 +360,7 @@ public class GameActivity extends AppCompatActivity {
             return;
         }
 
-        if (currentActiveRowOnGrid >= gridLayoutWord.getRowCount()) {
+        if (currentActiveRowOnGrid >= letterCells.length) {
             Toast.makeText(this, "Grid full! Level " + currentLevelData.getLevelNumber() + " ended.", Toast.LENGTH_LONG).show();
             enableGameControls(false);
             List<Word> remainingWords = new ArrayList<>();
@@ -346,8 +381,16 @@ public class GameActivity extends AppCompatActivity {
         currentTargetWord = currentWordObject.getWord().toUpperCase();
         gameManager.resetHintsForNewWord();
         
-        // Initialize hint preview
-        initializeHintPreview();
+        // Initialize hint tracking and clear hint preview grid
+        revealedHintPositions = new boolean[currentTargetWord.length()];
+        if (hintCells != null) {
+            for (TextView hintCell : hintCells) {
+                if (hintCell != null) {
+                    hintCell.setText("");
+                    setCellBackground(hintCell, R.color.game_grid_cell_empty_bg);
+                }
+            }
+        }
 
         currentGuessBuilder.setLength(0);
         clearInputRow(currentActiveRowOnGrid);
@@ -362,68 +405,70 @@ public class GameActivity extends AppCompatActivity {
         System.out.println("GA_DEBUG: prepareForNextWordInLevel - Word: " + currentTargetWord + " (L:" + currentLevelData.getLevelNumber() + ", W_idx:" + currentWordIndexInLevel + ", GridRow:" + currentActiveRowOnGrid + ")");
     }
 
-    private void initializeHintPreview() {
+    private void initializeGridUI(int numRows) {
+        // Initialize hint preview grid
         hintPreviewGrid.removeAllViews();
-        hintPreviewGrid.setColumnCount(currentTargetWord.length());
+        hintCells = new TextView[wordLength];
+        
+        // Initialize main word grid
+        wordDisplayContainer.removeAllViews();
+        letterCells = new TextView[numRows][wordLength];
+        
+        int cellSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 48, getResources().getDisplayMetrics());
+        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
+
+        // Set up hint preview grid
+        hintPreviewGrid.setColumnCount(wordLength);
         hintPreviewGrid.setRowCount(1);
         
-        hintPreviewCells = new TextView[currentTargetWord.length()];
-        revealedHintPositions = new boolean[currentTargetWord.length()];
-        
-        int cellSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
-        
-        for (int i = 0; i < currentTargetWord.length(); i++) {
-            TextView cell = new TextView(this);
+        for (int i = 0; i < wordLength; i++) {
+            TextView cell = createCell(cellSize, margin);
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = cellSize;
             params.height = cellSize;
             params.setMargins(margin, margin, margin, margin);
-            
+            params.rowSpec = GridLayout.spec(0);
+            params.columnSpec = GridLayout.spec(i);
             cell.setLayoutParams(params);
-            cell.setBackgroundResource(R.drawable.grid_cell_bg);
-            cell.setTextColor(ContextCompat.getColor(this, R.color.lex_text_on_purple_primary));
-            cell.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
-            cell.setGravity(Gravity.CENTER);
-            cell.setAllCaps(true);
-            cell.setText("");
-            
-            hintPreviewCells[i] = cell;
+            hintCells[i] = cell;
             hintPreviewGrid.addView(cell);
         }
-    }
 
-    private void initializeGridUI(int numRows) {
-        gridLayoutWord.removeAllViews();
-        letterCells = new TextView[numRows][wordLength];
-        int cellSize = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 52, getResources().getDisplayMetrics());
-        int margin = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 2, getResources().getDisplayMetrics());
-        int textSizeInSp = 28;
+        // Set up main word grid
+        wordDisplayContainer.setColumnCount(wordLength);
+        wordDisplayContainer.setRowCount(numRows);
 
         for (int r = 0; r < numRows; r++) {
             for (int c = 0; c < wordLength; c++) {
-                TextView cell = new TextView(this);
+                TextView cell = createCell(cellSize, margin);
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.width = cellSize;
                 params.height = cellSize;
                 params.setMargins(margin, margin, margin, margin);
+                params.rowSpec = GridLayout.spec(r);
+                params.columnSpec = GridLayout.spec(c);
                 cell.setLayoutParams(params);
-                cell.setBackgroundResource(R.drawable.grid_cell_bg);
-                cell.setTextColor(ContextCompat.getColor(this, R.color.lex_text_on_purple_primary));
-                cell.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSp);
-                cell.setGravity(Gravity.CENTER);
-                cell.setAllCaps(true);
-                cell.setText("");
                 letterCells[r][c] = cell;
-                gridLayoutWord.addView(cell);
+                wordDisplayContainer.addView(cell);
             }
         }
     }
 
+    private TextView createCell(int cellSize, int margin) {
+        TextView cell = new TextView(this);
+        cell.setBackgroundResource(R.drawable.grid_cell_bg);
+        cell.setTextColor(ContextCompat.getColor(this, R.color.lex_text_on_purple_primary));
+        cell.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+        cell.setGravity(Gravity.CENTER);
+        cell.setAllCaps(true);
+        cell.setText("");
+        return cell;
+    }
+
     private void clearInputRow(int rowIndex) {
-        if (letterCells != null && rowIndex < gridLayoutWord.getRowCount() && rowIndex >= 0) {
+        if (letterCells != null && rowIndex < letterCells.length && letterCells[rowIndex] != null) {
             for (int c = 0; c < wordLength; c++) {
-                if (letterCells[rowIndex] != null && c < letterCells[rowIndex].length && letterCells[rowIndex][c] != null) {
+                if (letterCells[rowIndex][c] != null) {
                     letterCells[rowIndex][c].setText("");
                     setCellBackground(letterCells[rowIndex][c], R.color.game_grid_cell_empty_bg);
                 }
@@ -432,65 +477,100 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setupCustomKeyboard() {
-        View keyboardView = findViewById(R.id.customKeyboardLayout);
-        if (keyboardView instanceof ViewGroup) {
-            setKeyboardListeners((ViewGroup) keyboardView);
+        View keyboardView = findViewById(R.id.keyboardInclude);
+        if (keyboardView == null) {
+            Log.e("GameActivity", "Keyboard view not found");
+            return;
         }
-    }
 
-    private void setKeyboardListeners(ViewGroup vg) {
-        for (int i = 0; i < vg.getChildCount(); i++) {
-            View child = vg.getChildAt(i);
-            if (child instanceof ViewGroup) {
-                setKeyboardListeners((ViewGroup) child);
-            } else if (child instanceof Button) {
-                Button keyButton = (Button) child;
-                if (keyButton.getId() == R.id.buttonBackspaceKeyboard) {
-                    keyButton.setOnClickListener(v -> handleBackspace());
-                } else if (keyButton.getId() == R.id.buttonEnterKeyboard) {
-                    keyButton.setOnClickListener(v -> handleSubmitGuess());
-                } else {
-                    String keyText = keyButton.getText().toString();
-                    keyButton.setOnClickListener(v -> handleLetterKeyPress(keyText));
-                }
+        // Set up letter buttons
+        String[] letters = {"Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P",
+                          "A", "S", "D", "F", "G", "H", "J", "K", "L",
+                          "Z", "X", "C", "V", "B", "N", "M"};
+        
+        for (String letter : letters) {
+            int buttonId = getResources().getIdentifier("button" + letter, "id", getPackageName());
+            Button button = keyboardView.findViewById(buttonId);
+            if (button != null) {
+                button.setOnClickListener(v -> handleLetterKeyPress(letter));
             }
+        }
+
+        // Set up Enter button
+        Button enterButton = keyboardView.findViewById(R.id.buttonEnterKeyboard);
+        if (enterButton != null) {
+            enterButton.setOnClickListener(v -> handleSubmitGuess());
+        }
+
+        // Set up Backspace button
+        Button backspaceButton = keyboardView.findViewById(R.id.buttonBackspaceKeyboard);
+        if (backspaceButton != null) {
+            backspaceButton.setOnClickListener(v -> handleBackspace());
         }
     }
 
     private void handleLetterKeyPress(String letter) {
-        if (currentActiveRowOnGrid >= gridLayoutWord.getRowCount() || !buttonSubmitGuess.isEnabled()) return;
+        Log.d("GameActivity", "Letter pressed: " + letter);
+        if (currentActiveRowOnGrid >= letterCells.length || !buttonSubmit.isEnabled()) {
+            Log.d("GameActivity", "Letter press ignored - grid full or submit disabled");
+            return;
+        }
+        
         if (currentGuessBuilder.length() < wordLength) {
             currentGuessBuilder.append(letter);
+            Log.d("GameActivity", "Current word: " + currentGuessBuilder.toString());
             updateGridFromBuilder();
         }
     }
 
     private void handleBackspace() {
-        if (currentActiveRowOnGrid >= gridLayoutWord.getRowCount() || !buttonSubmitGuess.isEnabled()) return;
+        Log.d("GameActivity", "Backspace pressed");
+        if (currentActiveRowOnGrid >= letterCells.length || !buttonSubmit.isEnabled()) {
+            Log.d("GameActivity", "Backspace ignored - grid full or submit disabled");
+            return;
+        }
+        
         if (currentGuessBuilder.length() > 0) {
-            currentGuessBuilder.deleteCharAt(currentGuessBuilder.length() - 1);
+            currentGuessBuilder.setLength(currentGuessBuilder.length() - 1);
+            Log.d("GameActivity", "After backspace: " + currentGuessBuilder.toString());
             updateGridFromBuilder();
         }
     }
 
     private void updateGridFromBuilder() {
-        if (currentActiveRowOnGrid >= gridLayoutWord.getRowCount()) return;
+        if (currentActiveRowOnGrid >= letterCells.length) {
+            Log.e("GameActivity", "Cannot update grid - invalid row index");
+            return;
+        }
+        
         String currentText = currentGuessBuilder.toString();
-        for (int c = 0; c < wordLength; c++) {
-            if (letterCells != null && currentActiveRowOnGrid < letterCells.length &&
-                    letterCells[currentActiveRowOnGrid] != null && c < letterCells[currentActiveRowOnGrid].length &&
-                    letterCells[currentActiveRowOnGrid][c] != null) {
-                if (c < currentText.length()) {
-                    letterCells[currentActiveRowOnGrid][c].setText(String.valueOf(currentText.charAt(c)));
-                } else {
-                    letterCells[currentActiveRowOnGrid][c].setText("");
-                }
+        Log.d("GameActivity", "Updating grid with text: " + currentText);
+        
+        TextView[] currentRow = letterCells[currentActiveRowOnGrid];
+        if (currentRow == null) {
+            Log.e("GameActivity", "Current row is null");
+            return;
+        }
+        
+        // Clear the entire row first
+        for (int i = 0; i < wordLength && i < currentRow.length; i++) {
+            if (currentRow[i] != null) {
+                currentRow[i].setText("");
+                setCellBackground(currentRow[i], R.color.game_grid_cell_empty_bg);
+            }
+        }
+        
+        // Fill in the letters from the builder
+        for (int i = 0; i < currentText.length() && i < wordLength && i < currentRow.length; i++) {
+            if (currentRow[i] != null) {
+                currentRow[i].setText(String.valueOf(currentText.charAt(i)));
+                setCellBackground(currentRow[i], R.color.game_grid_cell_empty_bg);
             }
         }
     }
 
     private void handleSubmitGuess() {
-        if (currentActiveRowOnGrid >= gridLayoutWord.getRowCount() || !buttonSubmitGuess.isEnabled() || currentTargetWord == null) return;
+        if (currentActiveRowOnGrid >= letterCells.length || !buttonSubmit.isEnabled() || currentTargetWord == null) return;
         String guess = currentGuessBuilder.toString().toUpperCase();
 
         if (guess.length() != wordLength) {
@@ -577,12 +657,15 @@ public class GameActivity extends AppCompatActivity {
 
     private void updateLevelInfoUI() {
         if (currentLevelData != null) {
-            textViewLevelInfo.setText(String.format("Level %d (%d/%d words)",
+            String levelInfo = String.format("Level %d (%d/%d words)",
                     currentLevelData.getLevelNumber(),
                     Math.min(currentWordIndexInLevel + 1, currentLevelData.getWordsToGuess().size()),
-                    currentLevelData.getWordsToGuess().size()));
-        } else {
-            textViewLevelInfo.setText("Game Over");
+                    currentLevelData.getWordsToGuess().size());
+            
+            TextView toolbarTitle = findViewById(R.id.toolbarTitle);
+            if (toolbarTitle != null) {
+                toolbarTitle.setText(levelInfo);
+            }
         }
     }
 
@@ -615,24 +698,26 @@ public class GameActivity extends AppCompatActivity {
             int randomIndex = (int) (Math.random() * unrevealedPositions.size());
             int positionToReveal = unrevealedPositions.get(randomIndex);
 
-            // Reveal the letter
+            // Mark this position as revealed
             revealedHintPositions[positionToReveal] = true;
-            if (hintPreviewCells != null && positionToReveal < hintPreviewCells.length) {
-                TextView cell = hintPreviewCells[positionToReveal];
-                cell.setText(String.valueOf(currentTargetWord.charAt(positionToReveal)));
-                setCellBackground(cell, R.color.game_grid_cell_correct_pos_bg);
+            
+            // Update ONLY the hint preview grid
+            if (hintCells != null && positionToReveal < hintCells.length) {
+                TextView hintCell = hintCells[positionToReveal];
+                hintCell.setText(String.valueOf(currentTargetWord.charAt(positionToReveal)));
+                setCellBackground(hintCell, R.color.game_grid_cell_correct_pos_bg);
             }
 
             // Update hint button state
-            if (gameManager.getAvailableHints() <= 0) {
-                buttonHint.setEnabled(false);
-            }
+            buttonHint.setEnabled(gameManager.getAvailableHints() > 0);
+            
+            Toast.makeText(this, "Letter revealed in the hint row!", Toast.LENGTH_SHORT).show();
         }
     }
 
     private void handleGiveUp() {
         Log.d("GA_DEBUG_GiveUp", "handleGiveUp called.");
-        if (!buttonGiveUp.isEnabled() || currentLevelData == null) {
+        if (!buttonFlag.isEnabled() || currentLevelData == null) {
             Log.d("GA_DEBUG_GiveUp", "Button not enabled or currentLevelData is null. Returning.");
             return;
         }
@@ -653,7 +738,7 @@ public class GameActivity extends AppCompatActivity {
 
         List<Word> wordsInLevel = currentLevelData.getWordsToGuess();
         Log.d("GA_DEBUG_GiveUp", "Number of words in current level: " + wordsInLevel.size());
-        Log.d("GA_DEBUG_GiveUp", "GridLayout current rowCount: " + gridLayoutWord.getRowCount());
+        Log.d("GA_DEBUG_GiveUp", "GridLayout current rowCount: " + letterCells.length);
         Log.d("GA_DEBUG_GiveUp", "letterCells array rows: " + (letterCells != null ? letterCells.length : "null"));
 
         List<Word> wordsActuallyRevealedNow = new ArrayList<>();
@@ -662,8 +747,8 @@ public class GameActivity extends AppCompatActivity {
         for (int wordIdx = 0; wordIdx < wordsInLevel.size(); wordIdx++) {
             Log.d("GA_DEBUG_GiveUp", "Processing wordIdx: " + wordIdx + ", attempting to use gridRowToUse: " + gridRowToUse);
 
-            if (gridRowToUse >= gridLayoutWord.getRowCount()) {
-                Log.w("GA_DEBUG_GiveUp", "Grid is full. gridRowToUse (" + gridRowToUse + ") >= gridLayoutWord.getRowCount() (" + gridLayoutWord.getRowCount() + "). Breaking loop.");
+            if (gridRowToUse >= letterCells.length) {
+                Log.w("GA_DEBUG_GiveUp", "Grid is full. gridRowToUse (" + gridRowToUse + ") >= letterCells.length (" + letterCells.length + "). Breaking loop.");
                 break;
             }
             if (letterCells == null || gridRowToUse >= letterCells.length || letterCells[gridRowToUse] == null) {
@@ -817,16 +902,16 @@ public class GameActivity extends AppCompatActivity {
                     .start();
         }
         
-        buttonToggleKeyboard.setIconTint(ColorStateList.valueOf(
+        buttonKeyboard.setImageTintList(ColorStateList.valueOf(
             ContextCompat.getColor(this, isKeyboardVisible ? 
                 R.color.lex_purple_primary : R.color.lex_text_on_surface)));
     }
 
     private void enableGameControls(boolean enabled) {
-        buttonSubmitGuess.setEnabled(enabled);
+        buttonSubmit.setEnabled(enabled);
         buttonHint.setEnabled(enabled);
-        buttonGiveUp.setEnabled(enabled);
-        buttonToggleKeyboard.setEnabled(enabled);
+        buttonFlag.setEnabled(enabled);
+        buttonKeyboard.setEnabled(enabled);
         View keyboardView = findViewById(R.id.customKeyboardLayout);
         if (keyboardView instanceof ViewGroup) {
             enableDisableViewGroup((ViewGroup) keyboardView, enabled);

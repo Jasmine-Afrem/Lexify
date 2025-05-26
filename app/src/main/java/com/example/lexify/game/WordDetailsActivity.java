@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast; // <<<<<<<<<<<< ADD THIS IMPORT
 import androidx.annotation.NonNull;
@@ -18,6 +20,10 @@ import com.example.lexify.R;
 import com.example.lexify.model.Word;
 import java.util.ArrayList;
 import java.util.List;
+import android.view.WindowManager;
+import android.view.WindowInsets;
+import android.view.WindowInsetsController;
+import android.os.Build;
 
 public class WordDetailsActivity extends AppCompatActivity {
 
@@ -30,6 +36,17 @@ public class WordDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        
+        // Make the status bar transparent and extend content behind it
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            getWindow().setDecorFitsSystemWindows(false);
+        } else {
+            getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+            );
+        }
+        
         Log.d(TAG, "onCreate: Method started."); // Log start
 
         try { // <<<<<<<<<<<< START TRY BLOCK
@@ -143,7 +160,6 @@ public class WordDetailsActivity extends AppCompatActivity {
                     if (meaning.getSynonyms() != null && !meaning.getSynonyms().isEmpty()) {
                         details.append("Synonyms: ").append(String.join(", ", meaning.getSynonyms())).append("\n");
                     }
-                    // ... (add null checks for examples if you have them) ...
                     details.append("\n");
                 }
             } else {
@@ -151,9 +167,33 @@ public class WordDetailsActivity extends AppCompatActivity {
             }
             holder.textViewDetails.setText(details.toString().trim());
 
-            holder.itemView.setOnClickListener(v -> {
-                boolean isVisible = holder.textViewDetails.getVisibility() == View.VISIBLE;
-                holder.textViewDetails.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+            // Set initial arrow state
+            holder.imageViewArrow.setRotation(holder.textViewDetails.getVisibility() == View.VISIBLE ? 90 : 0);
+
+            holder.headerLayout.setOnClickListener(v -> {
+                boolean isExpanding = holder.textViewDetails.getVisibility() == View.GONE;
+                
+                // Animate the arrow rotation
+                holder.imageViewArrow.animate()
+                    .rotation(isExpanding ? 90 : 0)
+                    .setDuration(200)
+                    .start();
+
+                // Show/hide the details with animation
+                if (isExpanding) {
+                    holder.textViewDetails.setVisibility(View.VISIBLE);
+                    holder.textViewDetails.setAlpha(0f);
+                    holder.textViewDetails.animate()
+                        .alpha(1f)
+                        .setDuration(200)
+                        .start();
+                } else {
+                    holder.textViewDetails.animate()
+                        .alpha(0f)
+                        .setDuration(200)
+                        .withEndAction(() -> holder.textViewDetails.setVisibility(View.GONE))
+                        .start();
+                }
             });
         }
 
@@ -168,6 +208,8 @@ public class WordDetailsActivity extends AppCompatActivity {
         static class ViewHolder extends RecyclerView.ViewHolder {
             TextView textViewWord;
             TextView textViewDetails;
+            ImageView imageViewArrow;
+            LinearLayout headerLayout;
 
             @SuppressLint("LongLogTag")
             ViewHolder(View itemView) {
@@ -175,8 +217,12 @@ public class WordDetailsActivity extends AppCompatActivity {
                 Log.d(ADAPTER_TAG, "ViewHolder created.");
                 textViewWord = itemView.findViewById(R.id.textViewItemWord);
                 textViewDetails = itemView.findViewById(R.id.textViewItemDetails);
+                imageViewArrow = itemView.findViewById(R.id.imageViewArrow);
+                headerLayout = itemView.findViewById(R.id.headerLayout);
                 if (textViewWord == null) Log.e(ADAPTER_TAG, "ViewHolder: textViewItemWord is NULL!");
                 if (textViewDetails == null) Log.e(ADAPTER_TAG, "ViewHolder: textViewItemDetails is NULL!");
+                if (imageViewArrow == null) Log.e(ADAPTER_TAG, "ViewHolder: imageViewArrow is NULL!");
+                if (headerLayout == null) Log.e(ADAPTER_TAG, "ViewHolder: headerLayout is NULL!");
             }
         }
     }

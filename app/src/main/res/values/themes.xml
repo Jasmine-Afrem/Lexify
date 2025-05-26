@@ -7,9 +7,11 @@
         <item name="colorPrimary">@color/lex_purple_primary</item>
         <item name="colorPrimaryDark">@color/lex_purple_primary</item>
         <item name="colorAccent">@color/lex_purple_primary</item>
+        <item name="colorOnPrimary">@android:color/white</item>
         
         <!-- Status bar and navigation -->
-        <item name="android:statusBarColor">@color/lex_purple_primary</item>
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@color/lex_light_background</item>
         
         <!-- Background colors -->
@@ -132,5 +134,17 @@
     <style name="TextAppearance.Lexify.Navigation" parent="TextAppearance.Material3.BodyLarge">
         <item name="android:fontFamily">@font/sour_gummy_regular</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- Keyboard Button Style -->
+    <style name="Lexify.Button.Keyboard" parent="Widget.Material3.Button.TonalButton">
+        <item name="android:textSize">16sp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textStyle">bold</item>
+        <item name="backgroundTint">?attr/colorSurfaceVariant</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 </resources>

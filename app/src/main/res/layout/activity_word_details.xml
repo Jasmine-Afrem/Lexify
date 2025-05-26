@@ -5,37 +5,57 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
+    android:fitsSystemWindows="false"
     tools:context=".game.WordDetailsActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbarWordDetails"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
-        app:title="Word Meanings"
-        app:titleTextColor="?attr/colorOnPrimary"
-        android:elevation="4dp"/>
+        android:fitsSystemWindows="false">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbarWordDetails"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:title="Word Meanings"
+            app:titleCentered="false"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+            app:titleTextColor="?attr/colorOnPrimary"/>
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewWordDetails"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_below="@id/toolbarWordDetails"
+        android:layout_below="@id/appBarLayout"
         android:layout_above="@+id/buttonDoneViewingDetails"
         android:padding="8dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:clipToPadding="false"/>
 
-    <com.google.android.material.button.MaterialButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/buttonDoneViewingDetails"
-        style="@style/Lexify.Button.Primary"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"
-        android:text="Continue" />
+        android:text="Continue"
+        app:icon="@drawable/ic_check"
+        app:iconGravity="textEnd"
+        android:textColor="?attr/colorOnPrimary"
+        app:backgroundTint="?attr/colorPrimary"/>
 
-    </RelativeLayout> <!-- Make sure this closing tag is present and correct -->
+</RelativeLayout>

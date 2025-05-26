@@ -1,247 +1,209 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/lex_light_background"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="false"
     tools:context=".game.GameActivity">
 
-    <!-- App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:elevation="0dp">
+        android:background="?attr/colorPrimary"
+        android:fitsSystemWindows="false">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/lex_purple_primary"
-            android:elevation="4dp">
-
-            <ImageButton
-                android:id="@+id/back_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="start"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Back"
-                android:src="@drawable/ic_arrow_back"
-                app:tint="@color/lex_surface_color" />
+            android:minHeight="?attr/actionBarSize"
+            android:paddingTop="0dp"
+            android:paddingBottom="0dp"
+            app:contentInsetStart="4dp"
+            app:contentInsetStartWithNavigation="16dp"
+            app:navigationIcon="@drawable/ic_back"
+            app:navigationIconTint="?attr/colorOnPrimary"
+            app:title=""
+            app:titleCentered="true">
 
             <TextView
-                android:id="@+id/textViewLevelInfo"
+                android:id="@+id/toolbarTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Level 1 (1/4)"
-                android:textAppearance="?attr/textAppearanceTitleMedium"
-                android:textColor="@android:color/white"
-                android:fontFamily="@font/sour_gummy_regular" />
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
+                android:textColor="?attr/colorOnPrimary"
+                android:text="Level 10 (1/4 words)" />
 
         </com.google.android.material.appbar.MaterialToolbar>
+
     </com.google.android.material.appbar.AppBarLayout>
 
-    <!-- Main Content -->
-    <androidx.core.widget.NestedScrollView
+    <!-- Clue Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/clueCard"
+        style="@style/Lexify.CardView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:layout_height="wrap_content"
+        android:layout_below="@id/appBarLayout"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp">
 
-        <RelativeLayout
+        <TextView
+            android:id="@+id/textViewClue"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Clue (noun): A large keyboard musical instrument with a wooden case enclosing a soundboard and metal strings, whi..."
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurface" />
+    </com.google.android.material.card.MaterialCardView>
 
-            <!-- Clue Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/clueCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/lex_purple_primary"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
+    <!-- Word Display Area -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/wordDisplayCard"
+        style="@style/Lexify.CardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/clueCard"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp">
 
-                <TextView
-                    android:id="@+id/textViewClueArea"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:minLines="2"
-                    android:maxLines="4"
-                    android:padding="16dp"
-                    android:scrollbars="vertical"
-                    android:text="Clue will appear here."
-                    android:textAppearance="?attr/textAppearanceBodyMedium"
-                    android:textColor="@android:color/white"
-                    android:fontFamily="@font/sour_gummy_regular" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Controls Layout -->
-            <LinearLayout
-                android:id="@+id/controlsLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center"
-                android:baselineAligned="false">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonHint"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:icon="@drawable/ic_lightbulb"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    style="@style/Widget.Material3.Button.ElevatedButton"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    app:elevation="4dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonSubmitGuess"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Submit"
-                    style="@style/Widget.Material3.Button.ElevatedButton"
-                    android:backgroundTint="@color/lex_purple_primary"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    app:elevation="4dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonGiveUp"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:icon="@drawable/ic_flag"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    style="@style/Widget.Material3.Button.ElevatedButton"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    app:elevation="4dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/buttonToggleKeyboard"
-                    android:layout_width="0dp"
-                    android:layout_height="56dp"
-                    android:layout_weight="1"
-                    app:icon="@drawable/ic_keyboard"
-                    app:iconGravity="textStart"
-                    app:iconPadding="0dp"
-                    style="@style/Widget.Material3.Button.ElevatedButton"
-                    android:insetTop="0dp"
-                    android:insetBottom="0dp"
-                    app:elevation="4dp" />
-
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center">
 
             <!-- Hint Preview Grid -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/hintPreviewCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/clueCard"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/lex_surface_color"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="2dp">
-
-                <GridLayout
-                    android:id="@+id/hintPreviewGrid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="8dp" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Main Grid Layout Container -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/gridLayoutContainer"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/hintPreviewCard"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/lex_surface_color"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp">
-
-                <GridLayout
-                    android:id="@+id/gridLayoutWord"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:padding="16dp" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Keyboard Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/keyboardCard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/controlsLayout"
-                android:layout_marginBottom="16dp"
-                android:visibility="gone"
-                android:alpha="0"
-                app:cardBackgroundColor="@color/lex_surface_color"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="8dp">
-
-                <include
-                    android:id="@+id/customKeyboardLayout"
-                    layout="@layout/keyboard_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Hidden EditText for keyboard input -->
-            <EditText
-                android:id="@+id/hiddenEditText"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/clueText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="16dp"
-                android:text="Clue (noun): Celestial body emitting light."
-                android:textColor="@android:color/white"
-                android:textSize="18sp"
-                android:fontFamily="@font/sour_gummy_regular"
-                android:gravity="center" />
-
-            <TextView
-                android:id="@+id/levelText"
+            <androidx.gridlayout.widget.GridLayout
+                android:id="@+id/hintPreviewGrid"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Level 3 (1/4 words)"
-                android:textColor="@android:color/white"
-                android:textSize="20sp"
-                android:fontFamily="@font/sour_gummy_regular"
-                android:layout_marginStart="16dp" />
+                android:layout_marginBottom="8dp"
+                app:columnCount="5"
+                app:rowCount="1"
+                app:alignmentMode="alignMargins"
+                app:useDefaultMargins="true" />
 
-        </RelativeLayout>
-    </androidx.core.widget.NestedScrollView>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?attr/colorPrimary"
+                android:layout_marginBottom="8dp"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+            <!-- Main Word Grid -->
+            <androidx.gridlayout.widget.GridLayout
+                android:id="@+id/wordDisplayContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:columnCount="5"
+                app:rowCount="6"
+                app:alignmentMode="alignMargins"
+                app:useDefaultMargins="true" />
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Keyboard Area -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/keyboardCard"
+        style="@style/Lexify.CardView.KeyboardContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/bottomActionContainer"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp">
+
+        <include
+            android:id="@+id/keyboardInclude"
+            layout="@layout/keyboard_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Bottom Action Buttons Container -->
+    <LinearLayout
+        android:id="@+id/bottomActionContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/hintButtonContainer"
+            style="@style/Lexify.CardView.ActionButtonContainer"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="8dp">
+
+            <ImageButton
+                android:id="@+id/buttonHint"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Get a hint"
+                android:src="@drawable/ic_hint" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/buttonSubmit"
+            style="@style/Lexify.Button.Primary"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_weight="1"
+            android:text="Submit" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/flagButtonContainer"
+            style="@style/Lexify.CardView.ActionButtonContainer"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp">
+
+            <ImageButton
+                android:id="@+id/buttonFlag"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Flag word"
+                android:src="@drawable/ic_flag" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/keyboardButtonContainer"
+            style="@style/Lexify.CardView.ActionButtonContainer"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="8dp">
+
+            <ImageButton
+                android:id="@+id/buttonKeyboard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Toggle keyboard"
+                android:src="@drawable/ic_keyboard" />
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+</RelativeLayout>

@@ -311,6 +311,13 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/drawer_menu" />
+        app:menu="@menu/navigation_menu"
+        android:background="@color/lex_surface_color"
+        app:itemIconTint="@color/lex_purple_primary"
+        app:itemTextColor="@color/lex_text_on_surface"
+        app:itemIconSize="24dp"
+        app:itemVerticalPadding="16dp"
+        app:dividerInsetStart="16dp"
+        app:dividerInsetEnd="16dp" />
 
 </androidx.drawerlayout.widget.DrawerLayout>
