@@ -1,15 +1,32 @@
 package com.example.lexify.game;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.widget.Toast; // For How To Play and Leaderboard placeholders
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import com.example.lexify.R;
-import com.example.lexify.model.Word;
-import com.google.android.material.button.MaterialButton; // For Material Buttons from your layout
-import com.google.gson.Gson;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.navigation.NavigationView;
+import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
+    private DrawerLayout drawerLayout;
+    private PlayerStats playerStats;
+    private NavigationView navigationView;
+    private static final String PREFS_NAME = "LexifyGamePrefs";
+    private static final String KEY_CURRENT_LEVEL = "currentLevel";
+    private SharedPreferences gamePrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -18,71 +35,162 @@ public class MainActivity extends AppCompatActivity {
         // And the R.layout.activity_main reference is correct.
         setContentView(R.layout.activity_main);
 
-        // Your existing JSON parsing - keep it if it's useful for testing/reference
-        String json = "{\n" +
-                "  \"word\": \"precipitate\",\n" +
-                "  \"meanings\": [\n" +
-                "    {\n" +
-                "      \"partOfSpeech\": \"verb\",\n" +
-                "      \"definition\": \"To cause something to happen suddenly or unexpectedly.\",\n" +
-                "      \"examples\": [\n" +
-                "        \"The incident precipitated a political crisis.\"\n" +
-                "      ]\n" +
-                "    },\n" +
-                "    {\n" +
-                "      \"partOfSpeech\": \"adjective\",\n" +
-                "      \"definition\": \"Done, made, or acting suddenly or without careful consideration.\",\n" +
-                "      \"examples\": [\n" +
-                "        \"A precipitate decision that led to disaster.\"\n" +
-                "      ]\n" +
-                "    }\n" +
-                "  ]\n" +
-                "}";
+        // Initialize PlayerStats
+        playerStats = new PlayerStats(this);
 
-        Word word = parseWordJson(json);
-        System.out.println("Word (from MainActivity test): " + word.getWord());
-        // ... (your existing print statements)
+        // Initialize preferences
+        gamePrefs = getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
 
-        // --- Button Listeners ---
-        MaterialButton startGameButton = findViewById(R.id.start_game_button); // Use MaterialButton if your XML uses it
-        MaterialButton settingsButton = findViewById(R.id.settings_button);
-        MaterialButton howToPlayButton = findViewById(R.id.how_to_play_button);
-        MaterialButton leaderboardButton = findViewById(R.id.leaderboard_button);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+        }
 
+        drawerLayout = findViewById(R.id.drawer_layout);
+        navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        // Set up menu button
+        ImageButton menuButton = findViewById(R.id.menu_button);
+        menuButton.setOnClickListener(v -> drawerLayout.openDrawer(GravityCompat.START));
+
+        // Set up start game button
+        MaterialButton startGameButton = findViewById(R.id.buttonStartGame);
         if (startGameButton != null) {
-            startGameButton.setOnClickListener(v -> {
-                // We will launch GameActivity here
-                // Assuming GameActivity will be in com.example.lexify.game package as well
-                Intent intent = new Intent(MainActivity.this, GameActivity.class);
-                startActivity(intent);
-            });
+            startGameButton.setOnClickListener(v -> startGame());
         }
 
-        if (settingsButton != null) {
-            settingsButton.setOnClickListener(v -> {
-                // Assuming SettingsActivity is also in com.example.lexify.game package
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-            });
+        // Update level display
+        updateLevelDisplay();
+
+        // Update player info
+        updatePlayerInfo();
+        updateStatistics();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Update level display when returning to MainActivity
+        updateLevelDisplay();
+        updatePlayerInfo();
+        updateStatistics();
+    }
+
+    private void updatePlayerInfo() {
+        // Get saved player name
+        String playerName = gamePrefs.getString("playerName", "Player");
+        
+        // Update main screen player info
+        TextView playerNameView = findViewById(R.id.player_name);
+        if (playerNameView != null) {
+            playerNameView.setText(playerName);
         }
 
-        if (howToPlayButton != null) {
-            howToPlayButton.setOnClickListener(v -> {
-                // Placeholder for How To Play
-                Toast.makeText(MainActivity.this, "How To Play: Coming Soon!", Toast.LENGTH_SHORT).show();
-            });
+        // Update navigation drawer header
+        View headerView = navigationView.getHeaderView(0);
+        if (headerView != null) {
+            TextView headerPlayerName = headerView.findViewById(R.id.nav_header_player_name);
+            if (headerPlayerName != null) {
+                headerPlayerName.setText(playerName);
+            }
         }
 
-        if (leaderboardButton != null) {
-            leaderboardButton.setOnClickListener(v -> {
-                // Placeholder for Leaderboard
-                Toast.makeText(MainActivity.this, "Leaderboard: Coming Soon!", Toast.LENGTH_SHORT).show();
-            });
+        // Update level display
+        updateLevelDisplay();
+    }
+
+    private void updateStatistics() {
+        TextView gamesPlayedView = findViewById(R.id.games_played);
+        TextView wordsGuessedView = findViewById(R.id.words_guessed);
+        TextView avgTimeView = findViewById(R.id.avg_time);
+        TextView successRateView = findViewById(R.id.success_rate);
+
+        if (gamesPlayedView != null) {
+            gamesPlayedView.setText(String.valueOf(playerStats.getGamesPlayed()));
+        }
+
+        if (wordsGuessedView != null) {
+            wordsGuessedView.setText(String.valueOf(playerStats.getWordsGuessed()));
+        }
+
+        if (avgTimeView != null) {
+            float avgTime = playerStats.getAverageTimePerWord();
+            avgTimeView.setText(String.format(Locale.getDefault(), "%.1fs", avgTime));
+        }
+
+        if (successRateView != null) {
+            float successRate = playerStats.getSuccessRate();
+            successRateView.setText(String.format(Locale.getDefault(), "%.1f%%", successRate));
         }
     }
 
-    private Word parseWordJson(String json) {
-        Gson gson = new Gson();
-        return gson.fromJson(json, Word.class);
+    private void updateLevelDisplay() {
+        int currentLevel = gamePrefs.getInt(KEY_CURRENT_LEVEL, 1);
+        TextView playerLevelView = findViewById(R.id.player_level);
+        TextView navHeaderLevel = navigationView.getHeaderView(0).findViewById(R.id.nav_header_player_level);
+        
+        String levelText = String.format("Level %d", currentLevel);
+        if (playerLevelView != null) {
+            playerLevelView.setText(levelText);
+        }
+        if (navHeaderLevel != null) {
+            navHeaderLevel.setText(levelText);
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.nav_home) {
+            // Already on home screen
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else if (id == R.id.nav_play) {
+            startGame();
+        } else if (id == R.id.nav_how_to_play) {
+            showHowToPlay();
+        } else if (id == R.id.nav_leaderboard) {
+            showLeaderboard();
+        } else if (id == R.id.nav_settings) {
+            openSettings();
+        } else if (id == R.id.nav_about) {
+            showAbout();
+        }
+
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    private void startGame() {
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
+    }
+
+    private void openSettings() {
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void showHowToPlay() {
+        Toast.makeText(this, "How To Play: Coming Soon!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showLeaderboard() {
+        Toast.makeText(this, "Leaderboard: Coming Soon!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showAbout() {
+        Toast.makeText(this, "About Lexify: Coming Soon!", Toast.LENGTH_SHORT).show();
     }
 }

@@ -11,15 +11,14 @@ import java.util.Random;
 
 public class GameManager {
     private List<Level> allLevels;
-    private int currentLevelIndex;        // 0-based index of the current level being played
+    private int currentLevelIndex = 0;        // 0-based index of the current level being played
     private int currentWordIndexInLevel;  // 0-based index of the current word within that level
     private Word currentWordToGuess;      // The actual Word object for the current word
-    private int hintsUsedForCurrentWord;
+    private static final int MAX_HINTS_PER_WORD = 3;
+    private int hintsUsedForCurrentWord = 0;
 
     public GameManager() {
         loadGameData();
-        currentLevelIndex = 0;
-        hintsUsedForCurrentWord = 0;
     }
 
     private Word.Meaning createSimpleMeaning(String pos, String def, String... syns) {
@@ -234,6 +233,26 @@ public class GameManager {
     }
 
     /**
+     * Gets the number of hints still available for the current word.
+     * @return Number of hints remaining
+     */
+    public int getAvailableHints() {
+        return MAX_HINTS_PER_WORD - hintsUsedForCurrentWord;
+    }
+
+    /**
+     * Uses one hint for the current word.
+     * @return true if hint was successfully used, false if no hints remaining
+     */
+    public boolean useHint() {
+        if (hintsUsedForCurrentWord < MAX_HINTS_PER_WORD) {
+            hintsUsedForCurrentWord++;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Resets the hint counter for a new word.
      * Should be called by GameActivity when it prepares a new word for guessing.
      */
@@ -246,5 +265,19 @@ public class GameManager {
      */
     public boolean areAllGameManagerLevelsCompleted() {
         return currentLevelIndex >= allLevels.size();
+    }
+
+    /**
+     * Returns the current level index (0-based).
+     * @return The current level index, or -1 if no levels are available.
+     */
+    public int getCurrentLevelIndex() {
+        return currentLevelIndex;
+    }
+
+    public void setCurrentLevel(int levelIndex) {
+        if (levelIndex >= 0 && levelIndex < allLevels.size()) {
+            this.currentLevelIndex = levelIndex;
+        }
     }
 }

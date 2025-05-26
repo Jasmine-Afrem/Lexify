@@ -4,65 +4,112 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:background="@android:color/transparent">
+    android:padding="8dp">
 
     <!-- First Row -->
     <LinearLayout style="@style/PurpleKeyboardRow">
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="Q" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="W" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="E" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="R" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="T" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="Y" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="U" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="I" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="O" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="P" />
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="Q" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="W" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="E" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="R" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="T" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="Y" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="U" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="I" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="O" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="P" />
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <!-- Second Row -->
-    <LinearLayout style="@style/PurpleKeyboardRow" android:paddingStart="10dp" android:paddingEnd="10dp">
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="A" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="S" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="D" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="F" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="G" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="H" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="J" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="K" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="L" />
+    <LinearLayout style="@style/PurpleKeyboardRow">
+        <Space android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.5" />
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="A" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="S" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="D" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="F" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="G" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="H" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="J" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="K" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="L" />
+        </com.google.android.material.card.MaterialCardView>
+        <Space android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="0.5" />
     </LinearLayout>
 
-    <!-- Third Row - CORRECTED -->
-    <LinearLayout style="@style/PurpleKeyboardRow" android:paddingStart="5dp" android:paddingEnd="5dp">
-        <com.google.android.material.button.MaterialButton
-            style="@style/PurpleKeyboardButton.Special"
-            android:id="@+id/buttonEnterKeyboard"
-            android:text=""
-            app:icon="@drawable/baseline_keyboard_return_24"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconTint="@color/lex_text_on_purple_secondary"
-            app:iconSize="32dp"
-            android:contentDescription="Enter" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="Z" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="X" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="C" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="V" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="B" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="N" />
-        <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="M" />
-        <com.google.android.material.button.MaterialButton
-            style="@style/PurpleKeyboardButton.Special"
-            android:id="@+id/buttonBackspaceKeyboard"
-            android:text=""
-            app:icon="@drawable/ic_backspace"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconTint="@color/lex_text_on_purple_secondary"
-            android:contentDescription="Backspace" />
+    <!-- Third Row -->
+    <LinearLayout style="@style/PurpleKeyboardRow">
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard.Special">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonEnterKeyboard"
+                style="@style/PurpleKeyboardButton.Special"
+                app:icon="@drawable/baseline_keyboard_return_24"
+                app:iconGravity="textStart" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="Z" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="X" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="C" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="V" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="B" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="N" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard">
+            <com.google.android.material.button.MaterialButton style="@style/PurpleKeyboardButton" android:text="M" />
+        </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView style="@style/KeyboardButtonCard.Special">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/buttonBackspaceKeyboard"
+                style="@style/PurpleKeyboardButton.Special"
+                app:icon="@drawable/ic_backspace"
+                app:iconGravity="textStart" />
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
 </LinearLayout>

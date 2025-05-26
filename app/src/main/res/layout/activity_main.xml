@@ -1,86 +1,316 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".game.MainActivity"
-    android:background="#FFFFFF"
-    android:padding="24dp">
+    android:fitsSystemWindows="true"
+    tools:context=".game.MainActivity">
 
-    <!-- Container for all the content -->
-    <LinearLayout
-        android:id="@+id/container"
-        android:orientation="vertical"
+    <!-- Main Content -->
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="100dp"
-        android:layout_marginBottom="100dp">
+        android:layout_height="match_parent"
+        android:background="@color/lex_light_background">
 
-        <!-- App Logo (Now bigger) -->
-        <ImageView
-            android:id="@+id/logomic"
-            android:layout_width="200dp"
-        android:layout_height="150dp"
-        android:layout_marginBottom="40dp"
-        android:src="@drawable/logomic" />
+        <!-- Toolbar -->
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/lex_purple_primary"
+            android:elevation="4dp"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Start Game Button (Solid Purple, No Borders) -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/start_game_button"
-            android:layout_width="wrap_content"
+            <ImageButton
+                android:id="@+id/menu_button"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Menu"
+                android:src="@drawable/ic_menu"
+                app:tint="@color/lex_surface_color" />
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+        <!-- Main Content Container -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:backgroundTint="@color/lex_purple_primary"
-            android:text="Start Game"
-            android:textColor="@android:color/white"
-            app:cornerRadius="16dp"
-            app:iconPadding="12dp"
-            app:rippleColor="@color/lex_purple_primary_dark" />
+            android:layout_margin="16dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp"
+            app:layout_constraintTop_toBottomOf="@id/toolbar"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- How to Play Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/how_to_play_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="How to Play"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/lex_purple_primary"
-            android:layout_marginBottom="20dp"
-            app:cornerRadius="16dp"
-            app:iconPadding="12dp"
-            app:rippleColor="@color/lex_purple_primary" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <!-- Leaderboard Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/leaderboard_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Leaderboard"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/lex_purple_primary"
-            android:layout_marginBottom="20dp"
-            app:cornerRadius="16dp"
-            app:iconPadding="12dp"
-            app:rippleColor="@color/lex_purple_primary_dark" />
+                <!-- Logo Header Section -->
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/lex_purple_primary"
+                    android:padding="24dp">
 
-        <!-- Settings Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/settings_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Settings"
-            android:textColor="@android:color/white"
-            android:backgroundTint="@color/lex_purple_primary"
-            app:cornerRadius="16dp"
-            app:iconPadding="12dp"
-            app:rippleColor="@color/lex_purple_primary_dark" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Lexify"
+                        android:textSize="48sp"
+                        android:textColor="@android:color/white"
+                        android:fontFamily="@font/sour_gummy_regular"
+                        android:letterSpacing="0.05" />
+                </FrameLayout>
 
-    </LinearLayout>
+                <!-- Content Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="24dp">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+                    <!-- Player Info Section -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginBottom="24dp">
+
+                        <TextView
+                            android:id="@+id/player_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Player"
+                            android:textSize="32sp"
+                            android:fontFamily="@font/sour_gummy_regular"
+                            android:textColor="@color/lex_text_on_surface" />
+
+                        <TextView
+                            android:id="@+id/player_level"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Level 3"
+                            android:textSize="24sp"
+                            android:fontFamily="@font/sour_gummy_regular"
+                            android:textColor="@color/lex_purple_primary" />
+                    </LinearLayout>
+
+                    <!-- Stats Grid -->
+                    <GridLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:columnCount="2"
+                        android:rowCount="2"
+                        android:layout_marginBottom="24dp">
+
+                        <!-- Games Played -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_margin="4dp"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/lex_purple_primary"
+                            android:alpha="0.8">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="16dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Games Played"
+                                    android:textColor="@color/lex_text_subtle_on_light_bg"
+                                    android:fontFamily="@font/sour_gummy_regular"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/games_played"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="13"
+                                    android:textSize="28sp"
+                                    android:fontFamily="@font/sour_gummy_regular"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/lex_purple_primary" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Words Guessed -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_margin="4dp"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/lex_purple_primary"
+                            android:alpha="0.8">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="16dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Words Guessed"
+                                    android:textColor="@color/lex_text_subtle_on_light_bg"
+                                    android:fontFamily="@font/sour_gummy_regular"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/words_guessed"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="12"
+                                    android:textSize="28sp"
+                                    android:fontFamily="@font/sour_gummy_regular"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/lex_purple_primary" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Average Time -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_margin="4dp"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/lex_purple_primary"
+                            android:alpha="0.8">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="16dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Average Time"
+                                    android:textColor="@color/lex_text_subtle_on_light_bg"
+                                    android:fontFamily="@font/sour_gummy_regular"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/avg_time"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="17.9s"
+                                    android:textSize="28sp"
+                                    android:fontFamily="@font/sour_gummy_regular"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/lex_purple_primary" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Success Rate -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_columnWeight="1"
+                            android:layout_margin="4dp"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp"
+                            app:strokeWidth="1dp"
+                            app:strokeColor="@color/lex_purple_primary"
+                            android:alpha="0.8">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
+                                android:padding="16dp"
+                                android:gravity="center">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Success Rate"
+                                    android:textColor="@color/lex_text_subtle_on_light_bg"
+                                    android:fontFamily="@font/sour_gummy_regular"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:id="@+id/success_rate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="22.6%"
+                                    android:textSize="28sp"
+                                    android:fontFamily="@font/sour_gummy_regular"
+                                    android:textStyle="bold"
+                                    android:textColor="@color/lex_purple_primary" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </GridLayout>
+
+                    <!-- Welcome Section -->
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Welcome to Lexify!"
+                        android:textSize="32sp"
+                        android:fontFamily="@font/sour_gummy_regular"
+                        android:textColor="@color/lex_text_on_surface" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center"
+                        android:text="Test your vocabulary with our word guessing game!"
+                        android:textSize="18sp"
+                        android:fontFamily="@font/sour_gummy_regular"
+                        android:textColor="@color/lex_text_subtle_on_light_bg" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/buttonStartGame"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:text="Start Game"
+                        android:textSize="20sp"
+                        android:fontFamily="@font/sour_gummy_regular"
+                        app:cornerRadius="12dp"
+                        style="@style/Widget.Material3.Button.ElevatedButton" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Navigation Drawer -->
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/drawer_menu" />
+
+</androidx.drawerlayout.widget.DrawerLayout>

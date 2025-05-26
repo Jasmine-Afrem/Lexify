@@ -14,7 +14,9 @@
 
     <!-- Neutral & Text Colors -->
     <color name="lex_light_background">#F5F3F7</color> <!-- Very light lavender/gray for page background -->
+    <color name="lex_dark_background">#1C1B1F</color> <!-- Dark background for night mode -->
     <color name="lex_surface_color">#FFFFFF</color> <!-- White for cards, dialogs -->
+    <color name="lex_surface_color_dark">#2B2930</color> <!-- Dark surface color for night mode -->
     <color name="lex_text_on_purple_primary">#FFFFFF</color>
     <color name="lex_text_on_purple_secondary">#FFFFFF</color>
     <color name="lex_text_on_pink">#FFFFFF</color>
