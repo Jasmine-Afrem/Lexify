@@ -6,37 +6,43 @@
     android:background="@color/lex_purple_primary"
     android:gravity="bottom"
     android:orientation="vertical"
-    android:padding="24dp"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="16dp"
+    android:paddingTop="16dp"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <!-- Profile Icon -->
     <ImageView
-        android:layout_width="64dp"
-        android:layout_height="64dp"
+        android:id="@+id/profileImage"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
-        android:contentDescription="Profile Picture"
         android:src="@drawable/ic_account_circle"
         app:tint="@android:color/white" />
 
     <!-- Player Name -->
     <TextView
-        android:id="@+id/nav_header_player_name"
+        android:id="@+id/profileName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Jasmine"
-        android:textAppearance="@style/TextAppearance.Material3.TitleLarge"
-        android:textColor="@android:color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/lex_text_on_purple_primary"
         android:fontFamily="@font/sour_gummy_regular" />
 
     <!-- Level -->
     <TextView
-        android:id="@+id/nav_header_player_level"
-        android:layout_width="match_parent"
+        android:id="@+id/profileLevel"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Level 10"
-        android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-        android:textColor="@android:color/white"
-        android:alpha="0.7"
+        android:text="Level 13"
+        android:textColor="@color/lex_text_on_purple_primary"
+        android:textSize="16sp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/sour_gummy_regular" />
 
 </LinearLayout> 

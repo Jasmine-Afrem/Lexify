@@ -58,14 +58,26 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp">
 
-        <TextView
-            android:id="@+id/textViewClue"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Clue (noun): A large keyboard musical instrument with a wooden case enclosing a soundboard and metal strings, whi..."
-            android:textAppearance="?attr/textAppearanceBodyLarge"
-            android:textColor="?attr/colorOnSurface" />
+            android:scrollbars="none">
+
+            <TextView
+                android:id="@+id/textViewClue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"
+                android:text="Clue (noun): A large keyboard musical instrument with a wooden case enclosing a soundboard and metal strings, which are struck by hammers when the keys are depressed."
+                android:textAppearance="?attr/textAppearanceBodyLarge"
+                android:textColor="?attr/colorOnSurface" />
+
+        </ScrollView>
+
     </com.google.android.material.card.MaterialCardView>
 
     <!-- Word Display Area -->

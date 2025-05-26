@@ -1,9 +1,9 @@
-package com.example.lexify.game; // Or your correct package
+package com.example.lexify.game;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log; // <<<<<<<<<<<< ADD THIS IMPORT
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast; // <<<<<<<<<<<< ADD THIS IMPORT
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,15 +20,11 @@ import com.example.lexify.R;
 import com.example.lexify.model.Word;
 import java.util.ArrayList;
 import java.util.List;
-import android.view.WindowManager;
-import android.view.WindowInsets;
-import android.view.WindowInsetsController;
-import android.os.Build;
 
 public class WordDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_WORDS_TO_DISPLAY = "extra_words_to_display";
-    private static final String TAG = "WordDetails_DEBUG"; // <<<<<<<<<<<< FOR LOGGING
+    private static final String TAG = "WordDetails_DEBUG";
 
     private ArrayList<Word> wordsToDisplay;
     private WordDetailsAdapter adapter;
@@ -36,28 +32,15 @@ public class WordDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
-        // Make the status bar transparent and extend content behind it
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            getWindow().setDecorFitsSystemWindows(false);
-        } else {
-            getWindow().setFlags(
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-            );
-        }
-        
-        Log.d(TAG, "onCreate: Method started."); // Log start
+        setContentView(R.layout.activity_word_details);
+        Log.d(TAG, "onCreate: Method started.");
 
-        try { // <<<<<<<<<<<< START TRY BLOCK
-            setContentView(R.layout.activity_word_details);
-            Log.d(TAG, "onCreate: setContentView(R.layout.activity_word_details) successful.");
-
+        try {
             RecyclerView recyclerView = findViewById(R.id.recyclerViewWordDetails);
             if (recyclerView == null) {
                 Log.e(TAG, "onCreate: FATAL - recyclerViewWordDetails is NULL. Check your layout XML ID.");
                 Toast.makeText(this, "Error: Details view not found.", Toast.LENGTH_LONG).show();
-                finish(); // Can't proceed without RecyclerView
+                finish();
                 return;
             }
             Log.d(TAG, "onCreate: recyclerViewWordDetails found.");
@@ -71,6 +54,7 @@ public class WordDetailsActivity extends AppCompatActivity {
                 Log.d(TAG, "onCreate: buttonDoneViewingDetails found.");
                 buttonDone.setOnClickListener(v -> {
                     Log.d(TAG, "Done button clicked. Finishing WordDetailsActivity.");
+                    setResult(RESULT_OK);
                     finish();
                 });
             }
@@ -101,10 +85,10 @@ public class WordDetailsActivity extends AppCompatActivity {
 
             Log.d(TAG, "onCreate: Setup complete.");
 
-        } catch (Exception e) { // <<<<<<<<<<<< CATCH ANY EXCEPTION
-            Log.e(TAG, "onCreate: CRASHED during setup!", e); // Log the full exception
+        } catch (Exception e) {
+            Log.e(TAG, "onCreate: CRASHED during setup!", e);
             Toast.makeText(this, "Error loading word details: " + e.getMessage(), Toast.LENGTH_LONG).show();
-            finish(); // Finish the activity if it crashes
+            finish();
             return;
         }
     }

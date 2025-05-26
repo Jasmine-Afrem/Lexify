@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -31,8 +32,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Make sure your activity_main.xml is in res/layout/
-        // And the R.layout.activity_main reference is correct.
         setContentView(R.layout.activity_main);
 
         // Initialize PlayerStats
@@ -91,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Update navigation drawer header
         View headerView = navigationView.getHeaderView(0);
         if (headerView != null) {
-            TextView headerPlayerName = headerView.findViewById(R.id.nav_header_player_name);
+            TextView headerPlayerName = headerView.findViewById(R.id.profileName);
             if (headerPlayerName != null) {
                 headerPlayerName.setText(playerName);
             }
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void updateLevelDisplay() {
         int currentLevel = gamePrefs.getInt(KEY_CURRENT_LEVEL, 1);
         TextView playerLevelView = findViewById(R.id.player_level);
-        TextView navHeaderLevel = navigationView.getHeaderView(0).findViewById(R.id.nav_header_player_level);
+        TextView navHeaderLevel = navigationView.getHeaderView(0).findViewById(R.id.profileLevel);
         
         String levelText = String.format("Level %d", currentLevel);
         if (playerLevelView != null) {
@@ -142,21 +141,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.nav_home) {
-            // Already on home screen
+        int itemId = item.getItemId();
+        
+        if (itemId == R.id.nav_home) {
+            // Already in MainActivity
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else if (id == R.id.nav_play) {
+        } else if (itemId == R.id.nav_start_game) {
             startGame();
-        } else if (id == R.id.nav_how_to_play) {
+        } else if (itemId == R.id.nav_how_to_play) {
             showHowToPlay();
-        } else if (id == R.id.nav_leaderboard) {
+        } else if (itemId == R.id.nav_leaderboard) {
             showLeaderboard();
-        } else if (id == R.id.nav_settings) {
+        } else if (itemId == R.id.nav_settings) {
             openSettings();
-        } else if (id == R.id.nav_about) {
+        } else if (itemId == R.id.nav_about) {
             showAbout();
+        } else if (itemId == R.id.nav_quit) {
+            showQuitConfirmationDialog();
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
@@ -192,5 +193,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void showAbout() {
         Toast.makeText(this, "About Lexify: Coming Soon!", Toast.LENGTH_SHORT).show();
+    }
+
+    private void showQuitConfirmationDialog() {
+        new AlertDialog.Builder(this, R.style.Lexify_AlertDialog)
+            .setTitle("Quit Game")
+            .setMessage("Are you sure you want to quit Lexify?")
+            .setPositiveButton("Yes", (dialog, which) -> {
+                // Save any necessary data before quitting
+                finishAffinity(); // This will close all activities and exit the app
+            })
+            .setNegativeButton("No", null)
+            .show();
     }
 }
