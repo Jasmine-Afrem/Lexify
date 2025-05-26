@@ -124,8 +124,17 @@ public class GameActivity extends AppCompatActivity {
         // Set up word details launcher
         setupWordDetailsLauncher();
 
-        // Load saved level or start from beginning
-        loadSavedLevelAndStart();
+        // Check if this is a replay of a specific level
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("SELECTED_LEVEL") && intent.getBooleanExtra("IS_REPLAY", false)) {
+            int selectedLevel = intent.getIntExtra("SELECTED_LEVEL", 1);
+            // Convert from 1-based level number to 0-based index
+            gameManager.setCurrentLevel(selectedLevel - 1);
+            startNewLevel();
+        } else {
+            // Load saved level or start from beginning
+            loadSavedLevelAndStart();
+        }
     }
 
     private void initializeUIComponents() {
@@ -200,10 +209,10 @@ public class GameActivity extends AppCompatActivity {
     }
 
     private void setupBackButtonHandlers() {
-        ImageButton backButton = findViewById(R.id.back_button);
-        if (backButton != null) {
-            backButton.setOnClickListener(v -> showExitConfirmationDialog());
-        }
+        // Set up toolbar navigation
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationOnClickListener(v -> showExitConfirmationDialog());
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -275,21 +284,24 @@ public class GameActivity extends AppCompatActivity {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         AlertDialog dialog = builder.setTitle("Exit Game")
-                .setMessage("Are you sure you want to exit? Your progress will be saved.")
+                .setMessage("Are you sure you want to exit?")
                 .setPositiveButton("Yes", (dialogInterface, which) -> {
-                    // Mark remaining words as failed attempts
-                    if (currentLevelData != null) {
-                        int remainingWords = currentLevelData.getWordsToGuess().size() - currentWordIndexInLevel;
-                        for (int i = 0; i < remainingWords; i++) {
-                            playerStats.addGuessResult(false);
+                    // Only save progress if this is not a replay
+                    if (!getIntent().getBooleanExtra("IS_REPLAY", false)) {
+                        // Mark remaining words as failed attempts
+                        if (currentLevelData != null) {
+                            int remainingWords = currentLevelData.getWordsToGuess().size() - currentWordIndexInLevel;
+                            for (int i = 0; i < remainingWords; i++) {
+                                playerStats.addGuessResult(false);
+                            }
+                            
+                            // Save current level before exiting
+                            gamePrefs.edit()
+                                .putInt(KEY_CURRENT_LEVEL, currentLevelData.getLevelNumber())
+                                .apply();
                         }
-                        
-                        // Save current level before exiting
-                        gamePrefs.edit()
-                            .putInt(KEY_CURRENT_LEVEL, currentLevelData.getLevelNumber())
-                            .apply();
+                        playerStats.incrementGamesPlayed();
                     }
-                    playerStats.incrementGamesPlayed();
                     
                     // Navigate back to MainActivity
                     Intent intent = new Intent(GameActivity.this, MainActivity.class);
@@ -408,37 +420,18 @@ public class GameActivity extends AppCompatActivity {
         wordDisplayContainer.removeAllViews();
         letterCells = new TextView[numRows][wordLength];
 
-        // Calculate cell size based on screen width and word length
+        // Calculate cell size based on screen width
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int totalHorizontalPadding = dpToPx(32); // Add some padding from screen edges
-        int availableWidth = screenWidth - totalHorizontalPadding;
-        int totalMargins = (wordLength + 1) * dpToPx(4); // Account for margins between cells
+        int cardPadding = dpToPx(32); // Account for card padding
+        int availableWidth = screenWidth - (2 * cardPadding);
+        int cellSpacing = dpToPx(4); // Space between cells
         
-        // Calculate cell size to fit all columns
-        int cellSize = Math.min(
-            (availableWidth - totalMargins) / wordLength,
-            dpToPx(48) // Max cell size of 48dp
-        );
+        // Calculate cell size to fit all columns with spacing
+        int totalSpacing = (wordLength + 1) * cellSpacing;
+        int cellSize = (availableWidth - totalSpacing) / wordLength;
         
-        // Ensure minimum cell size
-        cellSize = Math.max(cellSize, dpToPx(32)); // Minimum cell size of 32dp
-        
-        int margin = dpToPx(2);
-
-        // Center the grid by setting horizontal margins on the container
-        int totalGridWidth = (cellSize * wordLength) + (margin * 2 * wordLength);
-        int horizontalMargin = (screenWidth - totalGridWidth) / 2;
-        
-        // Apply margins to containers
-        ViewGroup.MarginLayoutParams hintGridParams = (ViewGroup.MarginLayoutParams) hintPreviewGrid.getLayoutParams();
-        hintGridParams.setMargins(horizontalMargin, hintGridParams.topMargin, 
-                                horizontalMargin, hintGridParams.bottomMargin);
-        hintPreviewGrid.setLayoutParams(hintGridParams);
-
-        ViewGroup.MarginLayoutParams wordGridParams = (ViewGroup.MarginLayoutParams) wordDisplayContainer.getLayoutParams();
-        wordGridParams.setMargins(horizontalMargin, wordGridParams.topMargin, 
-                                horizontalMargin, wordGridParams.bottomMargin);
-        wordDisplayContainer.setLayoutParams(wordGridParams);
+        // Ensure minimum and maximum cell sizes
+        cellSize = Math.max(dpToPx(40), Math.min(cellSize, dpToPx(56)));
 
         // Set up hint preview grid
         hintPreviewGrid.setColumnCount(wordLength);
@@ -449,7 +442,7 @@ public class GameActivity extends AppCompatActivity {
             GridLayout.LayoutParams params = new GridLayout.LayoutParams();
             params.width = cellSize;
             params.height = cellSize;
-            params.setMargins(margin, margin, margin, margin);
+            params.setMargins(cellSpacing, cellSpacing, cellSpacing, cellSpacing);
             params.rowSpec = GridLayout.spec(0);
             params.columnSpec = GridLayout.spec(i);
             cell.setLayoutParams(params);
@@ -467,7 +460,7 @@ public class GameActivity extends AppCompatActivity {
                 GridLayout.LayoutParams params = new GridLayout.LayoutParams();
                 params.width = cellSize;
                 params.height = cellSize;
-                params.setMargins(margin, margin, margin, margin);
+                params.setMargins(cellSpacing, cellSpacing, cellSpacing, cellSpacing);
                 params.rowSpec = GridLayout.spec(r);
                 params.columnSpec = GridLayout.spec(c);
                 cell.setLayoutParams(params);
@@ -482,7 +475,7 @@ public class GameActivity extends AppCompatActivity {
         cell.setBackgroundResource(R.drawable.grid_cell_bg);
         cell.setTextColor(ContextCompat.getColor(this, R.color.lex_text_on_purple_primary));
         // Calculate text size based on cell size
-        float textSize = cellSize * 0.4f; // Text size will be 40% of cell size
+        float textSize = cellSize * 0.5f; // Text size will be 50% of cell size
         cell.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         cell.setGravity(Gravity.CENTER);
         cell.setAllCaps(true);
@@ -831,8 +824,8 @@ public class GameActivity extends AppCompatActivity {
             gridRowToUse++;
         }
 
-        // Save current level before showing dialog
-        if (currentLevelData != null) {
+        // Save current level before showing dialog only if not in replay mode
+        if (currentLevelData != null && !getIntent().getBooleanExtra("IS_REPLAY", false)) {
             gamePrefs.edit()
                 .putInt(KEY_CURRENT_LEVEL, currentLevelData.getLevelNumber())
                 .apply();
@@ -917,6 +910,13 @@ public class GameActivity extends AppCompatActivity {
 
     private void proceedToNextLevelOrEndGame() {
         System.out.println("GA_DEBUG: proceedToNextLevelOrEndGame called.");
+        
+        // If this is a replay, just finish the activity
+        if (getIntent().getBooleanExtra("IS_REPLAY", false)) {
+            finish();
+            return;
+        }
+
         boolean hasNextLevel = gameManager.advanceToNextLevel();
 
         if (hasNextLevel) {
@@ -941,8 +941,8 @@ public class GameActivity extends AppCompatActivity {
                 .setTitle(title)
                 .setMessage(message)
                 .setPositiveButton("Back to Menu", (dialog, which) -> {
-                    // Save the final level
-                    if (currentLevelData != null) {
+                    // Save the final level only if not in replay mode
+                    if (currentLevelData != null && !getIntent().getBooleanExtra("IS_REPLAY", false)) {
                         gamePrefs.edit()
                             .putInt(KEY_CURRENT_LEVEL, currentLevelData.getLevelNumber())
                             .apply();

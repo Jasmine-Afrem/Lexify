@@ -312,7 +312,7 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
-        app:menu="@menu/navigation_menu"
+        app:menu="@menu/nav_menu"
         android:background="@color/lex_surface_color"
         app:itemIconTint="@color/lex_purple_primary"
         app:itemTextColor="@color/lex_text_on_surface"

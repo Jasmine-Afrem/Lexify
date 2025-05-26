@@ -24,15 +24,12 @@
 
         <activity
             android:name=".game.MainActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"
+            android:theme="@style/Theme.Lexify" />
 
         <activity
             android:name=".game.GameActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.Lexify" />
 
@@ -43,6 +40,12 @@
 
         <activity
             android:name=".game.SettingsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Lexify" />
+
+        <activity
+            android:name=".game.PreviousLevelsActivity"
+            android:screenOrientation="portrait"
             android:exported="false"
             android:theme="@style/Theme.Lexify" />
     </application>

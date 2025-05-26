@@ -95,18 +95,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:gravity="center">
+            android:gravity="center"
+            android:padding="16dp">
 
             <!-- Hint Preview Grid -->
-            <androidx.gridlayout.widget.GridLayout
-                android:id="@+id/hintPreviewGrid"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                app:columnCount="5"
-                app:rowCount="1"
-                app:alignmentMode="alignMargins"
-                app:useDefaultMargins="true" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:id="@+id/hintPreviewGrid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="8dp"
+                    app:columnCount="5"
+                    app:rowCount="1"
+                    app:alignmentMode="alignMargins"
+                    app:useDefaultMargins="false" />
+
+            </FrameLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -115,14 +123,21 @@
                 android:layout_marginBottom="8dp"/>
 
             <!-- Main Word Grid -->
-            <androidx.gridlayout.widget.GridLayout
-                android:id="@+id/wordDisplayContainer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:columnCount="5"
-                app:rowCount="6"
-                app:alignmentMode="alignMargins"
-                app:useDefaultMargins="true" />
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:id="@+id/wordDisplayContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:columnCount="5"
+                    app:rowCount="6"
+                    app:alignmentMode="alignMargins"
+                    app:useDefaultMargins="false" />
+
+            </FrameLayout>
 
         </LinearLayout>
 

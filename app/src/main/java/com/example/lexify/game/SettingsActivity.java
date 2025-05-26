@@ -7,12 +7,12 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.lexify.R;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -22,7 +22,7 @@ public class SettingsActivity extends AppCompatActivity {
     private static final String KEY_PLAYER_NAME = "playerName";
     private static final String KEY_PROFILE_PICTURE = "profilePicture";
 
-    private ShapeableImageView profilePicture;
+    private ImageView profilePicture;
     private TextInputEditText playerNameEditText;
     private MaterialButton saveButton;
     private SharedPreferences prefs;
@@ -40,7 +40,12 @@ public class SettingsActivity extends AppCompatActivity {
         profilePicture = findViewById(R.id.profile_picture);
         playerNameEditText = findViewById(R.id.player_name_edit_text);
         saveButton = findViewById(R.id.save_button);
-        ImageButton backButton = findViewById(R.id.back_button);
+        MaterialToolbar toolbar = findViewById(R.id.toolbar);
+
+        // Set up toolbar
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationOnClickListener(v -> finish());
 
         // Load saved player name
         String savedPlayerName = prefs.getString(KEY_PLAYER_NAME, "Player");
@@ -53,9 +58,7 @@ public class SettingsActivity extends AppCompatActivity {
             profilePicture.setImageURI(currentProfilePictureUri);
         }
 
-        // Set up click listeners
-        backButton.setOnClickListener(v -> finish());
-        
+        // Set up save button click listener
         saveButton.setOnClickListener(v -> saveChanges());
     }
 

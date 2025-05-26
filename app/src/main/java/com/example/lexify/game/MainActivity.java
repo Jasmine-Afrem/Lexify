@@ -148,6 +148,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             drawerLayout.closeDrawer(GravityCompat.START);
         } else if (itemId == R.id.nav_start_game) {
             startGame();
+        } else if (itemId == R.id.nav_previous_levels) {
+            showPreviousLevels();
         } else if (itemId == R.id.nav_how_to_play) {
             showHowToPlay();
         } else if (itemId == R.id.nav_leaderboard) {
@@ -205,5 +207,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             })
             .setNegativeButton("No", null)
             .show();
+    }
+
+    private void showPreviousLevels() {
+        Intent intent = new Intent(this, PreviousLevelsActivity.class);
+        startActivity(intent);
     }
 }
