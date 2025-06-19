@@ -42,7 +42,7 @@ There are a couple of ways to install Lexify on your Android device:
     *   Git
 *   **Clone the Repository:**
     ```bash
-    git clone [URL_OF_YOUR_REPOSITORY] Lexify
+    git clone https://github.com/Jasmine-Afrem/Lexify.git
     cd Lexify
     ```
 *   **Open in Android Studio:**
